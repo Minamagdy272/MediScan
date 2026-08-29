@@ -52,10 +52,8 @@ reports/*.pdf
 # Temporary / Scratch scripts
 scratch/
 
-# Frontend (Node / Angular)
-frontend/mediscan-ui/node_modules/
-frontend/mediscan-ui/dist/
-frontend/mediscan-ui/.angular/
+# Frontend
+frontend/
 node_modules/
 
 # IDE & OS
