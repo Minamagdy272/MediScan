@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# Secrets & Credentials
+credentials.json
+token.json
+.env
+*.env
+*.pem
+*.key
+
+# Data & Vector Databases (per user requirement)
+data/
+vectorstore/
+*.sqlite3
+*.db
+
+# Generated Output / Reports
+reports/*.pdf
+!reports/.gitkeep
+
+# Temporary / Scratch scripts
+scratch/
+
+# Frontend (Node / Angular)
+frontend/mediscan-ui/node_modules/
+frontend/mediscan-ui/dist/
+frontend/mediscan-ui/.angular/
+node_modules/
+
+# IDE & OS
+.idea/
+.vscode/
+.cursor/
+.DS_Store
+Thumbs.db
+*.log
