@@ -1,0 +1,91 @@
+.app-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--color-background);
+}
+
+.desktop-sidebar-wrapper {
+  height: 100%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .desktop-sidebar-wrapper {
+    display: none;
+  }
+}
+
+.mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(18, 27, 46, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 50;
+  display: flex;
+}
+
+.mobile-drawer-content {
+  width: 280px;
+  height: 100%;
+  background-color: var(--color-surface-soft);
+  box-shadow: var(--shadow-modal);
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.main-content-area {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.chat-scroll-viewport {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 140px; /* offset for floating composer */
+  scroll-behavior: smooth;
+}
+
+.chat-inner-container {
+  width: 100%;
+  max-width: var(--chat-max-width);
+  margin: 0 auto;
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.messages-flow {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.composer-floating-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, 0) 100%);
+  padding-top: 24px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.composer-floating-container > * {
+  pointer-events: auto;
+}

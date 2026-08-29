@@ -1,0 +1,63 @@
+<div class="app-layout">
+  <!-- Desktop Sidebar -->
+  <div class="desktop-sidebar-wrapper">
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <!-- Mobile Sidebar Backdrop & Drawer -->
+  @if (mobileSidebarOpen()) {
+    <div class="mobile-drawer-backdrop" (click)="closeMobileSidebar()">
+      <div class="mobile-drawer-content" (click)="$event.stopPropagation()">
+        <app-sidebar (closeMobile)="closeMobileSidebar()"></app-sidebar>
+      </div>
+    </div>
+  }
+
+  <!-- Main View Area -->
+  <main class="main-content-area">
+    <!-- Top Header -->
+    <app-header (toggleSidebar)="toggleMobileSidebar()"></app-header>
+
+    <!-- Scrollable Chat Stream Container -->
+    <div #chatScrollArea class="chat-scroll-viewport">
+      <div class="chat-inner-container">
+        @if (sessionService.messages().length === 0) {
+          <app-empty-state></app-empty-state>
+        } @else {
+          <div class="messages-flow">
+            @for (msg of sessionService.messages(); track msg.id) {
+              @if (msg.role === 'user') {
+                <app-user-message [msg]="msg"></app-user-message>
+              } @else {
+                <app-assistant-message
+                  [msg]="msg"
+                  (generatePdf)="onGeneratePdf($event)"
+                  (openEmailModal)="onOpenEmailModal($event)"
+                ></app-assistant-message>
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Floating Bottom Composer -->
+    <div class="composer-floating-container">
+      <app-composer
+        [disabled]="isProcessing()"
+        (messageSent)="handleSendMessage($event)"
+      ></app-composer>
+    </div>
+  </main>
+
+  <!-- Email Report Modal -->
+  @if (emailModalOpen()) {
+    <app-email-modal
+      [pdfFilename]="emailModalMsg()?.pdf_filename || 'MediScan_Clinical_Report.pdf'"
+      [isSending]="isSendingEmail()"
+      [errorMessage]="emailErrorMessage()"
+      (send)="onSendEmail($event)"
+      (close)="onCloseEmailModal()"
+    ></app-email-modal>
+  }
+</div>

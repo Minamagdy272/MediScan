@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MediScan - Clinical AI Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#005db8",
+                        "surface-dim": "#d1daf4",
+                        "on-tertiary-container": "#d9e4ff",
+                        "on-tertiary-fixed": "#001b3e",
+                        "surface-container-highest": "#d9e2fc",
+                        "on-primary-fixed-variant": "#00468d",
+                        "inverse-primary": "#aac7ff",
+                        "error": "#ba1a1a",
+                        "border-muted": "#DCE6F0",
+                        "on-primary-container": "#d8e4ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e1e8ff",
+                        "on-background": "#121b2e",
+                        "on-surface-variant": "#424752",
+                        "background": "#f9f9ff",
+                        "surface-variant": "#d9e2fc",
+                        "surface-soft": "#F4F9FD",
+                        "outline": "#727783",
+                        "on-surface": "#121b2e",
+                        "tertiary": "#044c99",
+                        "tertiary-fixed-dim": "#aac7ff",
+                        "on-tertiary-fixed-variant": "#00458d",
+                        "secondary-container": "#73e0fe",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary-fixed": "#001f27",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#1464c0",
+                        "on-secondary-container": "#006275",
+                        "surface-cyan": "#EAF8FC",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f1f3ff",
+                        "secondary-fixed-dim": "#66d5f2",
+                        "surface-bright": "#f9f9ff",
+                        "inverse-surface": "#273044",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#afecff",
+                        "status-critical": "#D93025",
+                        "tertiary-container": "#2e65b3",
+                        "error-container": "#ffdad6",
+                        "secondary": "#00687b",
+                        "on-secondary-fixed-variant": "#004e5d",
+                        "primary": "#004c99",
+                        "on-primary-fixed": "#001b3e",
+                        "tertiary-fixed": "#d6e3ff",
+                        "on-error": "#ffffff",
+                        "surface-container": "#e9edff",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9ff",
+                        "primary-fixed-dim": "#aac7ff",
+                        "inverse-on-surface": "#edf0ff",
+                        "text-muted": "#667085",
+                        "outline-variant": "#c2c6d4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "chat-max-width": "800px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "composer-bottom-offset": "40px",
+                        "stack-gap": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-sm": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "mono-metadata": ["JetBrains Mono"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "mono-metadata": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; }
+        .composer-shadow { box-shadow: 0 4px 20px rgba(23, 32, 51, 0.05); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen overflow-hidden flex font-body-lg"><div class="fixed inset-0 flex items-center justify-center z-0 pointer-events-none">
+  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCALKL0LUCRKY1DLS6REYiOldkCDHzcxDBdy9lbrJl0o3KVnUbUrkZ70Iyk8_kWFzdeGmjQUBYYVcn07hYkvmvBoWVnQBwyBINoUiOD6itQfEn1jbI8ej9qPzG_IqvnBH2RSroQw96IDKvRH8y-2EyexABUN8ggnBtzPAPboqYJEY5FWdOuU7ZWKrsVeUUPKap5g6laY5Qc8bCQgcScTiAp6h9oL9lNLH_Y38wopaEsJ32OgBHfDU0RzvAeophUxPpgbAs" alt="Watermark" class="w-[80%] max-w-[1200px] opacity-[0.05] object-contain" style="z-index: -1;">
+</div>
+<!-- Mobile Header -->
+<header class="md:hidden flex items-center justify-between px-margin-mobile h-16 bg-surface-soft border-b border-border-muted fixed top-0 w-full z-20">
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div class="font-headline-md font-bold text-primary tracking-tight">MediScan</div>
+</div>
+<button class="text-primary">
+<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
+</button>
+</header>
+<!-- Sidebar -->
+<aside class="hidden md:flex flex-col w-sidebar-width h-full fixed left-0 top-0 border-r border-border-muted bg-surface-soft z-10 p-4">
+<div class="flex items-center gap-3 mb-8 px-2">
+<img alt="MediScan Logo" class="h-8 w-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf8KawnmG5Z8ev7GVtEDBcFphJQ4aajpLpmBLiBaZiHXYi1AIuepsj8zgFjt0TrJ7f42Bi6fwnECDd_RPjeGcdTLbgHumNe5ecqHMRil7FTy7bVLxxywdab08Iz8CrcMa5X7yecFLDHyQhx5ejsX02oUTPugWvhKfUyk_rU_RXw_4DqvVd7TBg8kthqccTb1P_pPXCmYA2z4bqfaw9G5IuXsjCFkJfDk-eMAhiHP3GvIYK7q1ugdA2da3fhkTBQGUY27o">
+<div>
+<h1 class="font-headline-md font-bold text-primary tracking-tight leading-tight">MediScan</h1>
+<span class="font-label-caps text-text-muted">Clinical AI Assistant</span>
+</div>
+</div>
+<button class="flex items-center justify-center gap-2 w-full bg-primary text-on-primary py-3 px-4 rounded-lg hover:bg-tertiary transition-colors mb-6 font-headline-md">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+            New Consultation
+        </button>
+<div class="flex-1 overflow-y-auto">
+<div class="px-2 mb-2 font-label-caps text-text-muted uppercase tracking-wider relative">Recent</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-primary bg-primary-fixed font-bold hover:bg-surface-container transition-colors group" href="#">
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary" data-icon="chat_bubble">chat_bubble</span>
+<span class="truncate font-body-sm">Pleural effusion findings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary" data-icon="chat_bubble">chat_bubble</span>
+<span class="truncate font-body-sm">Chest X-ray analysis</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary" data-icon="chat_bubble">chat_bubble</span>
+<span class="truncate font-body-sm">Patient History Review</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto border-t border-border-muted pt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-text-muted" data-icon="settings">settings</span>
+<span class="font-body-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-text-muted" data-icon="help">help</span>
+<span class="font-body-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full md:ml-sidebar-width pt-16 md:pt-0 relative bg-background z-10">
+<!-- Top App Bar (Desktop) -->
+<header class="hidden md:flex justify-between items-center h-16 px-gutter w-full sticky top-0 bg-background/80 backdrop-blur-md z-10 border-b border-border-muted">
+<nav class="flex gap-6">
+<a class="text-on-surface-variant hover:text-primary font-label-caps transition-colors uppercase tracking-wider" href="#">Case Study</a>
+<a class="text-on-surface-variant hover:text-primary font-label-caps transition-colors uppercase tracking-wider" href="#">Evidence</a>
+<a class="text-on-surface-variant hover:text-primary font-label-caps transition-colors uppercase tracking-wider" href="#">Guidelines</a>
+</nav>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="account_circle">account_circle</span></button>
+</div>
+</header>
+<!-- Canvas -->
+<div class="flex-1 overflow-y-auto w-full flex flex-col items-center pb-[120px]">
+<!-- Empty State / Welcome -->
+<div class="flex-1 flex flex-col items-center justify-center w-full max-w-[chat-max-width] px-margin-mobile md:px-0 mt-24 mb-12 relative">
+
+<h2 class="font-display-lg text-primary mb-8 text-center">How can I assist today?</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+<button class="flex flex-col items-start p-4 bg-surface-soft border border-border-muted rounded-xl hover:border-primary hover:bg-surface-cyan transition-all text-left">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="science">science</span>
+<span class="font-headline-md text-on-surface">Explain a condition</span>
+<span class="font-body-sm text-text-muted mt-1">Provide clear medical explanations</span>
+</button>
+<button class="flex flex-col items-start p-4 bg-surface-soft border border-border-muted rounded-xl hover:border-primary hover:bg-surface-cyan transition-all text-left">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="analytics">analytics</span>
+<span class="font-headline-md text-on-surface">Analyze my findings</span>
+<span class="font-body-sm text-text-muted mt-1">Upload reports for AI insights</span>
+</button>
+</div>
+</div>
+<!-- Example Conversation Snippet (Hidden by default, shown for layout purposes) -->
+<div class="w-full max-w-[chat-max-width] px-margin-mobile md:px-0 flex flex-col gap-stack-gap hidden">
+<!-- User Message -->
+<div class="self-end max-w-[85%] bg-surface-soft border border-border-muted rounded-2xl rounded-tr-sm p-4 text-on-surface">
+<p class="">What are the typical radiological findings for a pleural effusion?</p>
+</div>
+<!-- AI Message -->
+<div class="self-start w-full text-on-surface space-y-4">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="smart_toy">smart_toy</span>
+</div>
+<div class="flex-1 space-y-4 pt-1">
+<p class="">Radiological findings for a pleural effusion vary depending on the imaging modality used. However, general indicators across common methods include:</p>
+<ul class="list-disc pl-5 space-y-2 text-text-muted">
+<li class=""><strong class="text-on-surface">Chest X-ray (CXR):</strong> Blunting of the costophrenic angle is the classic sign, often visible when fluid exceeds 200-300 ml. A "meniscus sign" (a concave upward curve of the fluid level) is frequently seen.</li>
+<li class=""><strong class="text-on-surface">Ultrasound:</strong> Highly sensitive. Fluid appears anechoic (black) or hypoechoic. Useful for identifying septations or loculations.</li>
+</ul>
+<div class="flex flex-wrap gap-2 mt-4">
+<div class="inline-flex items-center gap-1 bg-surface-cyan px-2 py-1 rounded text-primary font-label-caps border border-primary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="article">article</span>
+                                    Radiology Review (2022)
+                                </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Composer Pinned to Bottom -->
+<div class="absolute bottom-0 w-full left-0 bg-gradient-to-t from-background via-background to-transparent pt-6 pb-composer-bottom-offset px-margin-mobile flex justify-center">
+<div class="w-full max-w-[chat-max-width] relative">
+<div class="relative bg-surface-container-lowest border border-border-muted rounded-xl composer-shadow overflow-hidden flex items-end min-h-[60px] p-2 focus-within:border-primary transition-colors">
+<button class="p-2 text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-surface-soft mb-1">
+<span class="material-symbols-outlined" data-icon="attach_file">attach_file</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 resize-none py-3 px-2 text-on-surface font-body-lg max-h-32 placeholder:text-text-muted" placeholder="Ask MediScan something..." rows="1"></textarea>
+<button class="p-2 mb-1 ml-2 bg-primary text-on-primary rounded-lg hover:bg-tertiary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+<div class="text-center mt-2 font-mono-metadata text-text-muted text-[10px]">
+                    MediScan AI can make mistakes. Consider verifying important clinical information.
+                </div>
+</div>
+</div>
+</main>
+
+
+</body></html>
