@@ -35,12 +35,12 @@ MediScan is engineered as a **two-tier decoupled architecture**:
 
 ```mermaid
 graph TB
-    subgraph KNOWLEDGE_SOURCES ["📚 Multi-Source Clinical Knowledge Base"]
+    subgraph KNOWLEDGE_SOURCES ["Multi-Source Clinical Knowledge Base"]
         direction LR
         S1["Cleaned Medical Docs"] ~~~ S2["OpenI CXR Reports (XML)"] ~~~ S3["Clinical Guidelines"] ~~~ S4["Web Medical Sources"] ~~~ S5["Patient Education"]
     end
 
-    subgraph TIER1 ["🟢 TIER 1: Frozen VDB & Deterministic Hybrid RAG Engine"]
+    subgraph TIER1 ["TIER 1: Frozen VDB & Deterministic Hybrid RAG Engine"]
         direction TB
         ACQ["Data Ingestion Layer<br/>(Local, OpenI XML, Web, PDF)"] --> CLEAN["Medical Cleaner & De-Identification"]
         CLEAN --> PARSE["Clinical Section Parser<br/>(FINDINGS, IMPRESSION, HISTORY)"]
@@ -58,9 +58,9 @@ graph TB
         SUFF_GATE --> RETRIEVER_API[["MediScanRetriever.retrieve()<br/>Stable API Contract"]]
     end
 
-    subgraph TIER2 ["🟣 TIER 2: 13-Stage Agentic Pipeline with Deterministic Guardrails"]
+    subgraph TIER2 ["TIER 2: 13-Stage Agentic Pipeline with Deterministic Guardrails"]
         direction TB
-        U_IN["👤 User Input<br/>(Natural Language / CXR CV Findings)"] --> ST1["1. Router<br/>(Classify Intent & Complexity)"]
+        U_IN["User Input<br/>(Natural Language / CXR CV Findings)"] --> ST1["1. Router<br/>(Classify Intent & Complexity)"]
         ST1 --> ST2["2. Planner LLM<br/>(Draft Structured AgentPlan JSON)"]
         ST2 --> ST3["3. Plan Validator<br/>(Deterministic Python Safety Check)"]
         ST3 --> ST4["4. Deterministic Executor<br/>(Controlled Step Execution)"]
@@ -70,23 +70,23 @@ graph TB
         ST7 --> ST8["8. Clinical Generator LLM<br/>(Evidence-Grounded Report Draft)"]
         ST8 --> ST9["9. Tier-0 Validation<br/>(JSON Schema, Regex, Safety Filters)"]
         ST9 --> ST10["10. Independent Evaluator LLM<br/>(DeepSeek-V4 Faithfulness Score)"]
-        ST10 --> ST11["11. Deterministic Policy Engine<br/>(ACCEPT / REGENERATE / RE_RETRIEVE / ESCALATE)"]
+        ST10 --> ST11["11. Deterministic Policy Engine<br/>(Policy Decision Matrix)"]
         
-        ST11 -->|REGENERATE / RE-RETRIEVE| LOOP{"Bounded Recovery Loop<br/>(Max 3 Drafts)"}
-        LOOP -.->|Draft Retry with Critique| ST8
-        LOOP -.->|Broaden Search Strategy| ST5
+        ST11 -->|"REGENERATE / RE-RETRIEVE"| LOOP{"Bounded Recovery Loop<br/>(Max 3 Drafts)"}
+        LOOP -.->|"Draft Retry with Critique"| ST8
+        LOOP -.->|"Broaden Search Strategy"| ST5
         
-        ST11 -->|ACCEPT| ST13["13. Post-Approval Delivery"]
-        LOOP -->|ESCALATE (Limit Exceeded)| ESCALATE["Safe Uncertainty Fallback"]
+        ST11 -->|"ACCEPT"| ST13["13. Post-Approval Delivery"]
+        LOOP -->|"ESCALATE (Exhausted)"| ESCALATE["Safe Uncertainty Fallback"]
         ESCALATE --> ST13
     end
 
-    subgraph OUTPUTS ["🚀 Verified Multi-Modal Outputs"]
+    subgraph OUTPUTS ["Verified Multi-Modal Outputs"]
         direction LR
-        ST13 --> O1["🩺 Evidence-Grounded Answer"]
-        ST13 --> O2["📎 Verifiable Citations (Chunk IDs & Sources)"]
-        ST13 --> O3["📄 Branded PDF Clinical Report (ReportLab)"]
-        ST13 --> O4["✉️ Secure Email Dispatch (OAuth2 SMTP)"]
+        ST13 --> O1["Evidence-Grounded Answer"]
+        ST13 --> O2["Verifiable Citations (Chunk IDs & Sources)"]
+        ST13 --> O3["Branded PDF Clinical Report (ReportLab)"]
+        ST13 --> O4["Secure Email Dispatch (OAuth2 SMTP)"]
     end
 
     KNOWLEDGE_SOURCES ==> TIER1
@@ -125,7 +125,7 @@ classDiagram
         +str source_type
         +str audience
         +str evidence_level
-        +Dict sections
+        +dict sections
     }
 
     class MedicalChunk {
@@ -160,7 +160,7 @@ classDiagram
 
     class EvidenceSufficiencyResult {
         +bool is_sufficient
-        +List~str~ reason_codes
+        +list reason_codes
         +int valid_evidence_count
         +int high_quality_evidence_count
         +int source_diversity_count
@@ -180,7 +180,7 @@ classDiagram
 
 ```mermaid
 flowchart TD
-    subgraph STAGES ["⚡ 13-Stage Execution Matrix"]
+    subgraph STAGES ["13-Stage Execution Matrix"]
         S1["Stage 1: Intent & Complexity Router (LLM)"]
         S2["Stage 2: Planner (LLM) -> AgentPlan JSON Contract"]
         S3["Stage 3: Plan Validator (Deterministic Python)"]
@@ -197,10 +197,10 @@ flowchart TD
     end
 
     S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9 --> S10 --> S11
-    S11 -->|Fail (< 0.85)| S12
-    S12 -.->|Regenerate| S8
-    S12 -.->|Re-Retrieve| S5
-    S11 -->|Pass (>= 0.85)| S13
+    S11 -->|"Fail (Score < 0.85)"| S12
+    S12 -.->|"Regenerate"| S8
+    S12 -.->|"Re-Retrieve"| S5
+    S11 -->|"Pass (Score >= 0.85)"| S13
 
     classDef pyStyle fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0369a1;
     classDef llmStyle fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#6b21a8;
@@ -241,7 +241,7 @@ $$\text{Sufficiency} = \left( \max_{e \in E} S(e) \ge 0.65 \right) \land \left( 
 ```mermaid
 flowchart TD
     %% INGESTION FLOW
-    subgraph INGESTION ["📥 Ingestion & Dual Indexing Pipeline (Tier 1)"]
+    subgraph INGESTION ["Ingestion & Dual Indexing Pipeline (Tier 1)"]
         D1["Raw Clinical Data Sources<br/>(OpenI XML, Guidelines, Web, PDFs)"] --> D2["Normalization & Medical De-identification"]
         D2 --> D3["Clinical Section Header Extractor<br/>(FINDINGS, IMPRESSION, HISTORY, COMPARISON)"]
         D3 --> D4["Section-Aware Chunking (800 chars, 150 overlap)"]
@@ -251,7 +251,7 @@ flowchart TD
     end
 
     %% HYBRID RETRIEVAL FLOW
-    subgraph HYBRID_RETRIEVAL ["🔍 Hybrid Retrieval & Reranking Subsystem"]
+    subgraph HYBRID_RETRIEVAL ["Hybrid Retrieval & Reranking Subsystem"]
         Q["Clinical Retrieval Query"] --> QA["Dense Semantic Search (Top-20)"]
         Q --> QB["Sparse Keyword Search (Top-20)"]
         QA --> FUSION["Reciprocal Rank Fusion (RRF, k=60)"]
@@ -262,7 +262,7 @@ flowchart TD
     end
 
     %% ORCHESTRATION FLOW
-    subgraph AGENT_CONTROL ["🛡️ Agentic Reasoning & Guardrail Flow (Tier 2)"]
+    subgraph AGENT_CONTROL ["Agentic Reasoning & Guardrail Flow (Tier 2)"]
         USER_QUERY["Clinician / Patient Query"] --> ROUTER{"Intent & Complexity Router"}
         ROUTER -->|Medical Findings| PLANNER["LLM Plan Generation (AgentPlan)"]
         ROUTER -->|Conversational / Out-of-Domain| DIRECT_ROUTE["Deterministic Guardrail Handler"]
@@ -274,16 +274,16 @@ flowchart TD
         
         EXEC --> HYBRID_RETRIEVAL
         EV_OUT --> SUFF_CHECK{"Sufficiency Gate: Score >= 0.65?"}
-        SUFF_CHECK -->|Yes (Sufficient)| GEN_DRAFT["Evidence-Grounded Generator (LLM)"]
-        SUFF_CHECK -->|No (Insufficient)| QUERY_RETRY["Query Expansion / Soft Fallback"]
+        SUFF_CHECK -->|"Yes (Sufficient)"| GEN_DRAFT["Evidence-Grounded Generator (LLM)"]
+        SUFF_CHECK -->|"No (Insufficient)"| QUERY_RETRY["Query Expansion / Soft Fallback"]
         
         GEN_DRAFT --> TIER0_VAL["Tier-0 Syntax, Regex & Safety Verification"]
         TIER0_VAL --> EVALUATOR["Independent LLM Evaluator (Critique & Score)"]
         EVALUATOR --> POLICY{"Deterministic Policy Decision"}
         
-        POLICY -->|Passed (Score >= 0.85)| ACCEPTED["Approved Clinical Response"]
-        POLICY -->|Failed & Drafts < 3| REGEN["Controlled Regeneration with Critique"]
-        POLICY -->|Failed & Drafts >= 3| SAFE_FAIL["Safe Clinical Uncertainty Fallback"]
+        POLICY -->|"Passed (Score >= 0.85)"| ACCEPTED["Approved Clinical Response"]
+        POLICY -->|"Failed (Drafts < 3)"| REGEN["Controlled Regeneration with Critique"]
+        POLICY -->|"Failed (Drafts >= 3)"| SAFE_FAIL["Safe Clinical Uncertainty Fallback"]
         
         REGEN --> GEN_DRAFT
     end
@@ -302,15 +302,15 @@ flowchart TD
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Clinician as 🩺 Clinician / Radiologist
-    participant Gateway as 🌐 FastAPI Gateway / Orchestrator
-    participant Router as 🧭 Intent Router
-    participant Planner as 🧠 Planner & Validator
-    participant Tier1 as 🟢 Tier 1 Hybrid VDB
-    participant Generator as ✍️ Generator LLM
-    participant Evaluator as ⚖️ Independent Evaluator
-    participant Policy as 🛡️ Deterministic Policy Engine
-    participant Delivery as 📨 PDF & Delivery Service
+    actor Clinician as Clinician / Radiologist
+    participant Gateway as FastAPI Gateway / Orchestrator
+    participant Router as Intent Router
+    participant Planner as Planner & Validator
+    participant Tier1 as Tier 1 Hybrid VDB
+    participant Generator as Generator LLM
+    participant Evaluator as Independent Evaluator
+    participant Policy as Deterministic Policy Engine
+    participant Delivery as PDF & Delivery Service
 
     Clinician->>Gateway: Submit CXR Findings / Follow-up Query
     Gateway->>Router: Classify Clinical Intent & Complexity
@@ -396,13 +396,13 @@ stateDiagram-v2
 ```mermaid
 graph LR
     %% Actors
-    RAD((👨‍⚕️ Radiologist))
-    PHY((🩺 Attending Physician))
-    PAT((👤 Patient))
-    ADM((🛡️ Compliance & Safety Auditor))
+    RAD((Radiologist))
+    PHY((Attending Physician))
+    PAT((Patient))
+    ADM((Compliance & Safety Auditor))
 
     %% System Boundary
-    subgraph MEDISCAN_PLATFORM ["🏥 MediScan Intelligence System"]
+    subgraph MEDISCAN_PLATFORM ["MediScan Intelligence System"]
         UC1(["UC-1: Structure Raw CXR Findings"])
         UC2(["UC-2: Multi-Angle Hybrid Evidence Retrieval"])
         UC3(["UC-3: Grounded Clinical Report Generation"])
@@ -435,10 +435,10 @@ graph LR
     ADM --> UC9
 
     %% Use Case Relationships
-    UC1 -.->|<<include>>| UC2
-    UC3 -.->|<<include>>| UC9
-    UC3 -.->|<<include>>| UC2
-    UC6 -.->|<<extend>>| UC7
+    UC1 -.->|"include"| UC2
+    UC3 -.->|"include"| UC9
+    UC3 -.->|"include"| UC2
+    UC6 -.->|"extend"| UC7
 
     classDef actorStyle fill:#f8fafc,stroke:#334155,stroke-width:2px;
     classDef ucStyle fill:#f0fdf4,stroke:#16a34a,stroke-width:1.5px;
@@ -503,14 +503,14 @@ graph TD
 
 ```mermaid
 graph LR
-    subgraph INGESTED_DATA ["📁 Knowledge Base Repositories"]
+    subgraph INGESTED_DATA ["Knowledge Base Repositories"]
         D_OPENI["OpenI CXR Reports<br/>(Indiana University XML collection)"]
         D_GUIDE["Clinical Guidelines<br/>(Cardiology, Pulmonology, Radiology)"]
         D_REF["Clinical Reference Material<br/>(Gold-standard medical literature)"]
         D_PAT["Patient Education Material<br/>(Lifestyle, nutrition, discharge guidance)"]
     end
 
-    subgraph STORAGE_TIER ["💾 Persistent Storage"]
+    subgraph STORAGE_TIER ["Persistent Storage"]
         ST_CHROMA[("ChromaDB Vector Store<br/>vectorstore/chromadb")]
         ST_BM25[("BM25 Serialized Index<br/>vectorstore/bm25_index.pkl")]
         ST_REG[("Source Registry CSV<br/>data/registry/source_registry.csv")]
@@ -528,20 +528,20 @@ graph LR
 
 ```mermaid
 graph TD
-    subgraph CORE ["⚡ Core Intelligence & Models"]
+    subgraph CORE ["Core Intelligence & Models"]
         M1["NVIDIA NIM Embeddings<br/>nv-embedqa-e5-v5 (1024 dims)"]
         M2["NVIDIA NIM Reranker<br/>nv-rerankqa-mistral-4b"]
         M3["NVIDIA Nemotron / Llama-3.1-70B<br/>Clinical Reasoning & Planning"]
         M4["DeepSeek-V4 Flash / Nemotron<br/>Independent Quality Evaluator"]
     end
 
-    subgraph DATA_ENGINE ["💾 Storage & Retrieval Engine"]
+    subgraph DATA_ENGINE ["Storage & Retrieval Engine"]
         D1["ChromaDB<br/>(Persistent Vector Database)"]
         D2["Rank-BM25<br/>(Sparse Lexical Search)"]
         D3["LangChain Community<br/>(RAG Orchestration & Loaders)"]
     end
 
-    subgraph BACKEND_FRAMEWORK ["⚙️ Backend & Delivery Services"]
+    subgraph BACKEND_FRAMEWORK ["Backend & Delivery Services"]
         B1["FastAPI<br/>(High-Performance Async REST API)"]
         B2["Pydantic v2<br/>(Deterministic Type Schemas)"]
         B3["ReportLab<br/>(Clinical PDF Generation Engine)"]
