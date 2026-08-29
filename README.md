@@ -232,7 +232,7 @@ $$S_{\text{rerank}}(q, c) = \text{CrossEncoder}(q, c) \in [-\infty, +\infty] \xr
 ### 4.3 Deterministic Sufficiency Metric
 Evidence passes to the generator if and only if:
 
-$$\text{Sufficiency} = \left( \max_{e \in E} S(e) \ge 0.65 \right) \land \left( |\{ \text{doc\_id}(e) \mid e \in E \}| \ge 1 \right) \land \left( |E| \ge 1 \right)$$
+$$\text{Sufficiency} = \left( \max_{e \in E} S(e) \ge 0.65 \right) \land \left( |\{ \text{docID}(e) \mid e \in E \}| \ge 1 \right) \land \left( |E| \ge 1 \right)$$
 
 ---
 
