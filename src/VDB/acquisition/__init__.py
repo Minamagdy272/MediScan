@@ -1,0 +1,2 @@
+﻿# MediScan Data Acquisition package
+
